@@ -66,15 +66,15 @@ services:
     #   environment:
     #     - VIRTUAL_HOST=comsci-alumni.dev
 
-    # legendthbx-backend:
-    #   build: ./build/laravel/
-    #   container_name: legendthbx-backend
-    #   volumes:
-    #     - ../www/LegendThaiBoxing.Backend:/var/www/laravel
-    #   links:
-    #     - mysql
-    #   environment:
-    #     - VIRTUAL_HOST=legend.dev
+    legendthbx-backend:
+      build: ./build/laravel/
+      container_name: legendthbx-backend
+      volumes:
+        - ../www/LegendThaiBoxing.Backend:/var/www/laravel
+      links:
+        - mysql
+      environment:
+        - VIRTUAL_HOST=legend.dev
 
     # feora:
     #   build: ./build/php7-laravel/
@@ -85,6 +85,16 @@ services:
     #     - mysql
     #   environment:
     #     - VIRTUAL_HOST=feora.dev
+
+    lotto24:
+      build: ./build/php7-laravel/
+      container_name: lotto24
+      volumes:
+        - ../www/lotto24:/var/www/laravel
+      links:
+        - mysql
+      environment:
+        - VIRTUAL_HOST=lotto24.dev
 
     mysql:
       image: mysql
