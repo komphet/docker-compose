@@ -7,3 +7,4 @@
 www/*
 tmp/*
 !tmp/.gitkeep
+docker-compose.yml
