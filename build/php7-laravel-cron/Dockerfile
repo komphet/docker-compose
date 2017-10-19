@@ -22,4 +22,7 @@ RUN a2enmod rewrite
 
 COPY ./config/php.ini /usr/local/etc/php/
 
+# Install Cron
+RUN apt-get install cron -y && service cron start
+
 WORKDIR /var/www/laravel
