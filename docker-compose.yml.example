@@ -1,0 +1,47 @@
+version: "2"
+services:
+  nginx-proxy:
+    build: ./build/nginx-proxy/
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./certs:/etc/nginx/certs
+
+  lotto24:
+    build: ./build/php7-laravel/
+    container_name: lotto24
+    volumes:
+      - /mnt/volume-sgp1-04/www/lotto24:/var/www/laravel
+    links:
+      - mysql
+    environment:
+      - VIRTUAL_HOST=xn--r3cpasrbb0fhe8rf.com
+    ports:
+      - "8081:80"
+
+  mysql:
+    image: mysql
+    container_name: mysql
+    restart: always
+    volumes:
+      - ./build/mysql:/docker-entrypoint-initdb.d
+      - ./tmp/mysql:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: "lotto24"
+      MYSQL_USER: "lotto24"
+      MYSQL_PASSWORD: "AP17714500"
+      MYSQL_ROOT_PASSWORD: "L0tt024"
+    ports:
+      - "3306:3306"
+     
+  myadmin:
+    container_name: myadmin
+    image: phpmyadmin/phpmyadmin
+    links:
+      - mysql:db
+    ports:
+      - 8080:80
+
