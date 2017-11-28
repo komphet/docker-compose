@@ -10,15 +10,15 @@ services:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - ./certs:/etc/nginx/certs
 
-  lotto24:
+  example:
     build: ./build/php7-laravel/
-    container_name: lotto24
+    container_name: example
     volumes:
-      - /mnt/volume-sgp1-04/www/lotto24:/var/www/laravel
+      - /mnt/volume-sgp1-04/www/example:/var/www/laravel
     links:
       - mysql
     environment:
-      - VIRTUAL_HOST=xn--r3cpasrbb0fhe8rf.com
+      - VIRTUAL_HOST=example.com
     ports:
       - "8081:80"
 
@@ -30,10 +30,10 @@ services:
       - ./build/mysql:/docker-entrypoint-initdb.d
       - ./tmp/mysql:/var/lib/mysql
     environment:
-      MYSQL_DATABASE: "lotto24"
-      MYSQL_USER: "lotto24"
-      MYSQL_PASSWORD: "AP17714500"
-      MYSQL_ROOT_PASSWORD: "L0tt024"
+      MYSQL_DATABASE: "example"
+      MYSQL_USER: "example"
+      MYSQL_PASSWORD: "secret"
+      MYSQL_ROOT_PASSWORD: "secret"
     ports:
       - "3306:3306"
      
