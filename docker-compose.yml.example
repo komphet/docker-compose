@@ -1,48 +1,57 @@
-version: "2"
+version: "3.2"
 services:
-  nginx-proxy:
-    build: ./build/nginx-proxy/
-    container_name: nginx-proxy
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-      - ./certs:/etc/nginx/certs
 
-  example:
-    build: ./build/php7-laravel/
-    container_name: example
-    volumes:
-      - /mnt/volume-sgp1-04/www/example:/var/www/laravel
-    links:
-      - mysql
-    environment:
-      - VIRTUAL_HOST=example.com
-    ports:
-      - "8081:80"
+    nginx-proxy:
+      image: jwilder/nginx-proxy
+      container_name: nginx-proxy
+      networks:
+        - nat
+      ports:
+        - "80:80"
+        - "443:443"
+      volumes:
+        - /var/run/docker.sock:/tmp/docker.sock:ro
+        - ./certs:/etc/nginx/certs
 
-  mysql:
-    image: mysql
-    container_name: mysql
-    restart: always
-    command: --sql-mode="STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"
-    volumes:
-      - ./build/mysql:/docker-entrypoint-initdb.d
-      - ./tmp/mysql:/var/lib/mysql
-    environment:
-      MYSQL_DATABASE: "example"
-      MYSQL_USER: "example"
-      MYSQL_PASSWORD: "secret"
-      MYSQL_ROOT_PASSWORD: "secret"
-    ports:
-      - "3306:3306"
-     
-  myadmin:
-    container_name: myadmin
-    image: phpmyadmin/phpmyadmin
-    links:
-      - mysql:db
-    ports:
-      - 8080:80
 
+    example:
+      build: ./build/php7-laravel
+      container_name: example
+      networks:
+        - nat
+      volumes:
+        - ../www/example:/var/www/laravel
+      links:
+        - mysql
+      environment:
+        - VIRTUAL_HOST=example.com
+
+    mysql:
+      image: mysql
+      container_name: mysql
+      networks:
+        - nat
+      command: --sql-mode="STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"
+      volumes:
+        - ./build/mysql:/docker-entrypoint-initdb.d
+        - ./tmp/mysql:/var/lib/mysql
+      environment:
+        MYSQL_DATABASE: "example"
+        MYSQL_USER: "example"
+        MYSQL_PASSWORD: "secret"
+        MYSQL_ROOT_PASSWORD: "secret"
+      ports:
+        - "3306:3306"
+
+    myadmin:
+      networks:
+        - nat
+      container_name: myadmin
+      image: phpmyadmin/phpmyadmin
+      links:
+        - mysql:db
+      ports:
+        - 8080:80
+
+networks:
+  nat:
