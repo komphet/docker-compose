@@ -1,1 +1,1 @@
-docker-compose down --remove-orphans && docker-compose up -d --build
+docker-compose down --remove-orphans && COMPOSE_HTTP_TIMEOUT=1000 docker-compose up -d --build
